@@ -1,0 +1,252 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  /* Delaware flag: colonial blue + buff */
+  --background: #f6f5f1;
+  --foreground: #0d1526;
+  --muted: #efede6;
+  --muted-foreground: #5b6273;
+  --border: #e2e0d8;
+  --ring: #24509c;
+  --frame: #ffffff;
+  --brand: #24509c;
+  --brand-deep: #0f2147;
+  --brand-ink: #d6e0f2;
+  --accent: #e8c27a;
+  --danger: #c8372d;
+  --card-primary: #24509c;
+  --card-secondary: #eef2fa;
+  --card-foreground: #0d1526;
+  --card-foreground-muted: #4a5470;
+  --phone-screen: #f6f5f1;
+  --font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+.dark {
+  --background: #0b1220;
+  --foreground: #f3f1ea;
+  --muted: #121b2e;
+  --muted-foreground: #a3adc2;
+  --border: #1f2a40;
+  --ring: #e8c27a;
+  --frame: #070c17;
+  --brand: #2c5cb0;
+  --brand-deep: #0f2147;
+  --brand-ink: #d6e0f2;
+  --accent: #e8c27a;
+  --danger: #e0574c;
+  --card-primary: #24509c;
+  --card-secondary: #142342;
+  --card-foreground: #f3f1ea;
+  --card-foreground-muted: #b9c3d9;
+  --phone-screen: #f6f5f1;
+}
+
+@theme inline {
+  --color-frame: var(--frame);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-accent: var(--accent);
+  --color-brand: var(--brand);
+  --color-brand-deep: var(--brand-deep);
+  --color-brand-ink: var(--brand-ink);
+  --color-danger: var(--danger);
+  --color-card-primary: var(--card-primary);
+  --color-card-secondary: var(--card-secondary);
+  --color-card-foreground: var(--card-foreground);
+  --color-card-foreground-muted: var(--card-foreground-muted);
+  --color-phone-screen: var(--phone-screen);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+html {
+  color-scheme: light;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+html,
+body {
+  overscroll-behavior-x: none;
+}
+
+/* Custom text selection */
+::selection {
+  background-color: var(--accent);
+  color: var(--brand-deep);
+}
+
+html {
+  accent-color: var(--brand);
+  caret-color: var(--brand);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Hero field: colonial blue with a fine halftone dot screen (replaces the template photo) */
+.hero-field {
+  background-color: var(--brand);
+  background-image:
+    radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.16) 1px, transparent 1.6px),
+    radial-gradient(120% 80% at 50% 0%, #2e62b8 0%, var(--brand) 55%, #1c3f7d 100%);
+  background-size: 18px 18px, 100% 100%;
+}
+
+/* Ruled form lines that sit under the hero copy, like the field rows of an IRS form */
+.hero-rules {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 47px,
+    rgb(255 255 255 / 0.07) 47px,
+    rgb(255 255 255 / 0.07) 48px
+  );
+  mask-image: linear-gradient(to bottom, black 0%, transparent 70%);
+}
+
+@keyframes deadline-pulse {
+  0% { box-shadow: 0 0 0 0 rgb(200 55 45 / 0.45); }
+  70% { box-shadow: 0 0 0 10px rgb(200 55 45 / 0); }
+  100% { box-shadow: 0 0 0 0 rgb(200 55 45 / 0); }
+}
+
+.deadline-pulse {
+  animation: deadline-pulse 1.8s cubic-bezier(0.23, 1, 0.32, 1) 2.4s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  overflow-x: hidden;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.skip-to-content {
+  position: absolute;
+  left: -9999px;
+  top: 1rem;
+  z-index: 9999;
+  padding: 0.75rem 1rem;
+  background: var(--background);
+  border: 2px solid var(--ring);
+  border-radius: 0.375rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--foreground);
+}
+
+.skip-to-content:focus {
+  left: 1rem;
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.site-frame {
+  display: block;
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  background-color: var(--frame);
+}
+
+.site-frame--top {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+}
+
+.site-frame--bottom {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+}
+
+.site-frame--left {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 10px;
+}
+
+.site-frame--right {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 10px;
+}
+
+/* Corner decorations */
+.site-corner {
+  display: block;
+  position: fixed;
+  z-index: 9998;
+  pointer-events: none;
+  color: var(--frame);
+}
+
+.site-corner--top-left {
+  transform: rotate(90deg);
+  top: 10px;
+  left: 10px;
+}
+
+.site-corner--top-right {
+  top: 10px;
+  right: 10px;
+  transform: rotate(180deg);
+}
+
+.site-corner--bottom-left {
+  bottom: 10px;
+  left: 10px;
+  transform: rotate(0deg);
+}
+
+.site-corner--bottom-right {
+  bottom: 10px;
+  right: 10px;
+  transform: rotate(270deg);
+}
+
+/* Hide frame and corners on mobile */
+@media (max-width: 850px) {
+  .site-frame,
+  .site-corner {
+    display: none;
+  }
+}
