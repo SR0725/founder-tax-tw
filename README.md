@@ -1,4 +1,4 @@
-# Founder Tax TW (working name)
+# GoTax
 
 US tax compliance for Taiwanese founders who own a US company.
 
