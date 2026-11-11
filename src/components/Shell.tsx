@@ -22,7 +22,7 @@ const ICONS = {
 
 const NAV = {
   en: {
-    product: "Founder Tax",
+    product: "GoTax",
     groups: [
       { label: "", items: [["today", "Today"], ["filings", "Filings"], ["documents", "Documents"]] },
       { label: "Review", items: [["review", "Review queue"]] },
@@ -30,7 +30,7 @@ const NAV = {
     ],
   },
   zh: {
-    product: "Founder Tax",
+    product: "GoTax",
     groups: [
       { label: "", items: [["today", "今天"], ["filings", "申報項目"], ["documents", "文件"]] },
       { label: "審核", items: [["review", "待審核"]] },
@@ -59,7 +59,7 @@ export function Shell({
     <div className="flex min-h-screen bg-neutral-100 text-neutral-900 md:gap-2 md:p-2">
       <aside className="hidden w-60 shrink-0 flex-col rounded-xl bg-neutral-50 px-3 py-4 md:flex">
         <Link href="/" className="flex items-center gap-2 px-2 text-[15px] font-semibold tracking-tight">
-          <span className="grid h-6 w-6 place-items-center rounded-md bg-neutral-900 text-[10px] font-bold text-white">FT</span>
+          <span className="grid h-6 w-6 place-items-center rounded-md bg-neutral-900 text-[10px] font-bold text-white">GT</span>
           {nav.product}
         </Link>
         <nav className="mt-5 flex flex-col gap-5 text-sm">
@@ -69,10 +69,12 @@ export function Shell({
               {g.items.map(([id, label]) => {
                 const on = id === active;
                 return (
-                  <span
+                  <Link
                     key={id}
+                    href={id === "today" ? "/" : `/${id}`}
+                    aria-current={on ? "page" : undefined}
                     className={`flex h-8 items-center gap-2.5 rounded-md px-2 ${
-                      on ? "bg-blue-100/60 font-medium text-blue-600" : "text-neutral-600"
+                      on ? "bg-blue-100/60 font-medium text-blue-600" : "text-neutral-600 hover:bg-neutral-200/50"
                     }`}
                   >
                     {ICONS[id as keyof typeof ICONS]}
@@ -82,7 +84,7 @@ export function Shell({
                         {badge}
                       </span>
                     )}
-                  </span>
+                  </Link>
                 );
               })}
             </div>
@@ -102,6 +104,19 @@ export function Shell({
           <h1 className="truncate text-lg font-semibold tracking-tight">{title}</h1>
           <LangToggle lang={lang} onChange={onLang} />
         </header>
+        <nav className="flex gap-1 overflow-x-auto border-b border-neutral-100 px-3 py-2 text-sm md:hidden">
+          {nav.groups.flatMap((g) => g.items.map((it) => [it[0], it[1]] as [string, string])).map(([id, label]) => (
+            <Link
+              key={id}
+              href={id === "today" ? "/" : `/${id}`}
+              className={`whitespace-nowrap rounded-md px-2.5 py-1 ${
+                id === active ? "bg-blue-100/60 font-medium text-blue-600" : "text-neutral-600"
+              }`}
+            >
+              {label}
+            </Link>
+          ))}
+        </nav>
         <div className="mx-auto max-w-5xl px-4 py-6 md:px-8">{children}</div>
       </main>
     </div>

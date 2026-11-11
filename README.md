@@ -5,6 +5,8 @@ US tax compliance for Taiwanese founders who own a US company.
 Built at **c0mpiled-18: YC Startup School Hackathon, Taipei Edition** (2026-11-11).
 YC Request for Startups track: *The $15-an-Hour Expert* (Winter 2027).
 
+Landing page: https://gotax-pi.vercel.app/
+
 ## Problem
 
 A Taiwanese founder opens a Delaware company in an afternoon. After that, nobody

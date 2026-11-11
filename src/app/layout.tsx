@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Founder Tax TW",
+  title: "GoTax",
   description: "US tax compliance for Taiwanese founders who own a US company",
 };
 

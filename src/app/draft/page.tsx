@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CATEGORY_LABEL, type Draft } from "@/lib/draft";
 import { twd, useLang } from "@/lib/i18n";
 import { Shell } from "@/components/Shell";
@@ -112,6 +112,17 @@ export default function DraftPage() {
   const reportable = draft?.transactions.filter((x) => x.reportable) ?? [];
   const doneCount = draft ? draft.checklist.filter((c) => checked[c.id]).length : 0;
   const allDone = draft ? doneCount === draft.checklist.length : false;
+
+  // The review queue reads this so it can show where this filing stands.
+  useEffect(() => {
+    if (!draft) return;
+    try {
+      localStorage.setItem(
+        "draft-5472",
+        JSON.stringify({ flagged: flagged.length, done: doneCount, total: draft.checklist.length, source: draft.source }),
+      );
+    } catch {}
+  }, [draft, doneCount, flagged.length]);
 
   return (
     <Shell lang={lang} onLang={setLang} title={t.title} active="filings">
