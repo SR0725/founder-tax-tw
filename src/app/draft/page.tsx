@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { CATEGORY_LABEL, type Draft } from "@/lib/draft";
 import { twd, useLang } from "@/lib/i18n";
-import { LangToggle } from "@/components/LangToggle";
+import { Shell } from "@/components/Shell";
 
 const SAMPLE = "/sample-data/kuroshio-bank-2026.csv";
 
@@ -114,38 +114,34 @@ export default function DraftPage() {
   const allDone = draft ? doneCount === draft.checklist.length : false;
 
   return (
-    <div className="min-h-screen bg-[#f7f6f3] px-4 py-6 text-stone-900 md:px-10 md:py-8">
+    <Shell lang={lang} onLang={setLang} title={t.title} active="filings">
       <div className="mx-auto max-w-3xl">
-        <div className="flex items-center justify-between gap-3">
-          <Link href="/" className="text-sm text-stone-500 hover:text-stone-900">
-            {t.back}
-          </Link>
-          <LangToggle lang={lang} onChange={setLang} />
-        </div>
-        <h1 className="mt-4 text-2xl font-semibold tracking-tight">{t.title}</h1>
-        <p className="mt-1 text-stone-500">{t.meta}</p>
+        <Link href="/" className="text-sm text-neutral-500 hover:text-neutral-900">
+          {t.back}
+        </Link>
+        <p className="mt-2 text-sm text-neutral-500">{t.meta}</p>
 
-        <section className="mt-6 rounded-2xl bg-white p-6 ring-1 ring-stone-200">
+        <section className="mt-4 rounded-xl border border-neutral-200 p-5">
           <h2 className="font-semibold">{t.step1}</h2>
-          <p className="mt-1 text-sm leading-relaxed text-stone-500">{t.step1Sub}</p>
+          <p className="mt-1 text-sm leading-relaxed text-neutral-500">{t.step1Sub}</p>
           <div className="mt-4 flex flex-wrap items-center gap-3">
-            <label className="cursor-pointer rounded-lg bg-stone-900 px-4 py-2 text-sm font-medium text-white hover:bg-stone-700">
+            <label className="cursor-pointer rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-700">
               {t.upload}
               <input type="file" accept=".csv,text/csv" className="sr-only" onChange={(e) => onFile(e.target.files?.[0])} />
             </label>
-            <button onClick={useSample} className="rounded-lg bg-white px-4 py-2 text-sm font-medium ring-1 ring-stone-300 hover:ring-stone-500">
+            <button onClick={useSample} className="rounded-lg bg-white px-4 py-2 text-sm font-medium ring-1 ring-neutral-300 hover:ring-neutral-500">
               {t.sample}
             </button>
-            {fileName && <span className="text-sm text-stone-500">{fileName}</span>}
+            {fileName && <span className="text-sm text-neutral-500">{fileName}</span>}
           </div>
           {error && (
-            <p role="alert" className="mt-4 rounded-lg bg-rose-50 px-4 py-3 text-sm text-rose-800">
+            <p role="alert" className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-800">
               {error}
             </p>
           )}
           {status === "working" && (
-            <p className="mt-4 flex items-center gap-2 text-sm text-stone-600" aria-live="polite">
-              <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-stone-300 border-t-stone-900" />
+            <p className="mt-4 flex items-center gap-2 text-sm text-neutral-600" aria-live="polite">
+              <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-neutral-300 border-t-neutral-900" />
               {t.working}
             </p>
           )}
@@ -153,34 +149,34 @@ export default function DraftPage() {
 
         {draft && (
           <>
-            <section className="mt-4 rounded-2xl bg-white p-6 ring-1 ring-stone-200">
+            <section className="mt-4 rounded-xl border border-neutral-200 p-5">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
                 <h2 className="font-semibold">{t.step2}</h2>
                 <span
                   data-testid="source"
-                  className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                    draft.source === "claude" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"
+                  className={`rounded-md px-1.5 py-1 text-xs font-medium ${
+                    draft.source === "claude" ? "bg-green-100 text-green-800" : "bg-orange-100 text-orange-800"
                   }`}
                 >
                   {draft.sourceNote}
                 </span>
               </div>
-              <p className="mt-1 text-sm text-stone-500">
+              <p className="mt-1 text-sm text-neutral-500">
                 {t.summary(draft.transactions.length, reportable.length)}{" "}
-                <span className="font-medium text-amber-800">{t.decide(flagged.length)}</span>
+                <span className="font-medium text-orange-800">{t.decide(flagged.length)}</span>
               </p>
 
-              <dl className="mt-4 divide-y divide-stone-100">
+              <dl className="mt-4 divide-y divide-neutral-100">
                 {draft.fields.map((f, i) => (
-                  <div key={i} className={`grid gap-1 py-3 sm:grid-cols-[1fr_auto] ${f.needsReview ? "-mx-3 rounded-lg bg-amber-50/70 px-3" : ""}`}>
+                  <div key={i} className={`grid gap-1 py-3 sm:grid-cols-[1fr_auto] ${f.needsReview ? "-mx-3 rounded-lg bg-orange-50/70 px-3" : ""}`}>
                     <div>
-                      <dt className="text-xs text-stone-400">{f.section}</dt>
+                      <dt className="text-xs text-neutral-400">{f.section}</dt>
                       <dd className="font-medium">{f.label}</dd>
-                      <dd className="mt-0.5 text-sm text-stone-500">{f.basis}</dd>
+                      <dd className="mt-0.5 text-sm text-neutral-500">{f.basis}</dd>
                     </div>
                     <dd className="text-right">
                       <span className="font-mono text-[15px] tabular-nums">{f.value}</span>
-                      {f.needsReview && <span className="mt-1 block text-xs font-medium text-amber-800">{t.needsReview}</span>}
+                      {f.needsReview && <span className="mt-1 block text-xs font-medium text-orange-800">{t.needsReview}</span>}
                     </dd>
                   </div>
                 ))}
@@ -189,15 +185,15 @@ export default function DraftPage() {
               <h3 className="mt-6 text-sm font-semibold">{t.behind}</h3>
               <ul className="mt-2 flex flex-col gap-1.5 text-sm">
                 {reportable.concat(draft.transactions.filter((x) => !x.reportable && x.confidence === "low")).map((x) => (
-                  <li key={x.id} className="rounded-lg px-3 py-2 ring-1 ring-stone-100">
+                  <li key={x.id} className="rounded-lg px-3 py-2 ring-1 ring-neutral-100">
                     <div className="flex flex-wrap items-baseline justify-between gap-x-3">
                       <span>
-                        <span className="text-stone-400">{x.date}</span> {x.description}
+                        <span className="text-neutral-400">{x.date}</span> {x.description}
                       </span>
                       <span className="font-mono tabular-nums">{x.amount.toLocaleString("en-US", { style: "currency", currency: "USD" })}</span>
                     </div>
-                    <div className="mt-1 leading-relaxed text-stone-600">
-                      <span className={`mr-2 rounded-full px-2 py-0.5 text-xs font-medium ${x.confidence === "low" ? "bg-amber-100 text-amber-800" : "bg-stone-100 text-stone-700"}`}>
+                    <div className="mt-1 leading-relaxed text-neutral-600">
+                      <span className={`mr-2 rounded-md px-1.5 py-0.5 text-xs font-medium ${x.confidence === "low" ? "bg-orange-100 text-orange-800" : "bg-neutral-100 text-neutral-700"}`}>
                         {CATEGORY_LABEL[x.category][lang]}
                         {x.confidence === "low" ? ` · ${t.unsure}` : ""}
                       </span>
@@ -208,27 +204,27 @@ export default function DraftPage() {
               </ul>
             </section>
 
-            <section className="mt-4 rounded-2xl bg-white p-6 ring-1 ring-stone-200">
+            <section className="mt-4 rounded-xl border border-neutral-200 p-5">
               <h2 className="font-semibold">
                 {t.step3}{" "}
-                <span className="font-normal text-stone-400" data-testid="progress">
+                <span className="font-normal text-neutral-400" data-testid="progress">
                   · {t.of(doneCount, draft.checklist.length)}
                 </span>
               </h2>
-              <p className="mt-1 text-sm leading-relaxed text-stone-500">{t.step3Sub}</p>
+              <p className="mt-1 text-sm leading-relaxed text-neutral-500">{t.step3Sub}</p>
               <ul className="mt-4 flex flex-col gap-2">
                 {draft.checklist.map((c) => (
                   <li key={c.id}>
-                    <label className={`flex cursor-pointer items-start gap-3 rounded-lg px-4 py-3 ring-1 ${checked[c.id] ? "bg-emerald-50/50 ring-emerald-200" : "ring-stone-200"}`}>
+                    <label className={`flex cursor-pointer items-start gap-3 rounded-lg px-4 py-3 ring-1 ${checked[c.id] ? "bg-green-50/50 ring-green-200" : "ring-neutral-200"}`}>
                       <input
                         type="checkbox"
-                        className="mt-1 h-4 w-4 accent-emerald-600"
+                        className="mt-1 h-4 w-4 accent-green-600"
                         checked={Boolean(checked[c.id])}
                         onChange={(e) => setChecked((p) => ({ ...p, [c.id]: e.target.checked }))}
                       />
                       <span>
                         <span className="block font-medium">{c.text}</span>
-                        <span className="block text-sm leading-relaxed text-stone-500">{c.detail}</span>
+                        <span className="block text-sm leading-relaxed text-neutral-500">{c.detail}</span>
                       </span>
                     </label>
                   </li>
@@ -236,7 +232,7 @@ export default function DraftPage() {
               </ul>
               <button
                 disabled={!allDone}
-                className="mt-5 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:bg-stone-300"
+                className="mt-5 rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:bg-neutral-200 disabled:text-neutral-500"
               >
                 {allDone ? t.ready : t.left(draft.checklist.length - doneCount)}
               </button>
@@ -244,8 +240,8 @@ export default function DraftPage() {
           </>
         )}
 
-        <p className="mt-10 pb-6 text-xs leading-relaxed text-stone-400">{t.disclaimer}</p>
+        <p className="mt-10 pb-6 text-xs leading-relaxed text-neutral-400">{t.disclaimer}</p>
       </div>
-    </div>
+    </Shell>
   );
 }
