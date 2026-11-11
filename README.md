@@ -21,6 +21,15 @@ One complete workflow:
 3. AI drafts each filing and flags every field it is unsure about, with its reasoning.
 4. A non-credentialed reviewer clears an AI-generated checklist before a CPA signs.
 
+## Run it
+
+```bash
+npm install
+npm run dev
+```
+
+Then open http://localhost:3000. Put API keys in `.env.local` (never committed).
+
 ## Docs
 
 - `docs/CONTEXT.md`: full project context for teammates (Traditional Chinese)

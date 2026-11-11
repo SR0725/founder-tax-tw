@@ -8,3 +8,8 @@ dist/
 # real financial data never goes in the repo
 private-data/
 *.real.csv
+
+# next.js
+next-env.d.ts
+*.tsbuildinfo
+out/
