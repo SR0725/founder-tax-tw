@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Lang } from "@/lib/i18n";
 import { LangToggle } from "@/components/LangToggle";
+import { VoiceAssistant } from "@/components/VoiceAssistant";
 
 const icon = (d: string) => (
   <svg viewBox="0 0 16 16" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -119,6 +120,7 @@ export function Shell({
         </nav>
         <div className="mx-auto max-w-5xl px-4 py-6 md:px-8">{children}</div>
       </main>
+      <VoiceAssistant lang={lang} />
     </div>
   );
 }

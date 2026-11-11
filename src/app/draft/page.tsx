@@ -103,6 +103,12 @@ export default function DraftPage() {
     run("kuroshio-bank-2026.csv", csv);
   }
 
+  // The voice assistant sends the founder here with ?auto=1 to start drafting straight away.
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("auto") === "1") useSample();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   async function onFile(file: File | undefined) {
     if (!file) return;
     run(file.name, await file.text());
