@@ -4,12 +4,13 @@ import { motion, type Transition } from "motion/react";
 import { CircleAlert, Info, ShieldCheck } from "lucide-react";
 import type { ReactNode } from "react";
 import { FormDoc } from "@/components/form-doc";
+import { useLang, type L } from "@/lib/i18n";
 
 const EASE = [0.23, 1, 0.32, 1] as const;
 
 const DEPLOYMENT_STATS = [
-  { icon: "US", label: "US side", change: "IRS + Delaware" },
-  { icon: "TW", label: "Taiwan side", change: "CFC + income" },
+  { icon: "US", label: { en: "US side", zh: "美國端" }, change: { en: "IRS + Delaware", zh: "IRS + Delaware" } },
+  { icon: "TW", label: { en: "Taiwan side", zh: "台灣端" }, change: { en: "CFC + income", zh: "CFC + 海外所得" } },
 ];
 
 const cardAnimation = {
@@ -87,16 +88,17 @@ function DeploymentStat({
   change,
 }: {
   icon: string;
-  label: string;
-  change: string;
+  label: L;
+  change: L;
 }): ReactNode {
+  const { t } = useLang();
   return (
     <div className="flex items-center justify-between bg-background rounded-xl p-3">
       <div className="flex items-center gap-2">
         <span className="flex h-6 min-w-8 items-center justify-center rounded-md bg-brand px-1.5 text-[0.65rem] font-bold tracking-wide text-white">{icon}</span>
-        <span className="text-foreground font-medium">{label}</span>
+        <span className="text-foreground font-medium">{t(label)}</span>
       </div>
-      <span className="text-muted-foreground text-sm font-medium">{change}</span>
+      <span className="text-muted-foreground text-sm font-medium">{t(change)}</span>
     </div>
   );
 }
@@ -112,6 +114,7 @@ function DecorativeCircles(): ReactNode {
 }
 
 function StepByStepCard(): ReactNode {
+  const { t } = useLang();
   return (
     <motion.div
       {...cardAnimation}
@@ -120,10 +123,10 @@ function StepByStepCard(): ReactNode {
     >
       <div className="relative z-10 text-center mb-6 transition-transform duration-500 ease-out group-hover:scale-105">
         <h3 className="text-2xl md:text-4xl font-medium text-white leading-tight mb-3">
-          Drop in your exports. Get your filings.
+          {t({ en: "Drop in your exports. Get your filings.", zh: "丟進匯出檔，拿回該報的表。" })}
         </h3>
         <p className="text-brand-ink text-sm">
-          Upload a Stripe export and a bank statement. We read them and work out what your company owes.
+          {t({ en: "Upload a Stripe export and a bank statement. We read them and work out what your company owes.", zh: "上傳 Stripe 匯出檔和銀行對帳單，我們讀完後算出你的公司該報什麼。" })}
         </p>
       </div>
 
@@ -131,13 +134,13 @@ function StepByStepCard(): ReactNode {
         <PhoneMockup variant="full">
           <div className="absolute inset-0 bg-phone-screen pt-14 px-5">
             <h4 className="text-3xl font-medium text-neutral-900 leading-none tracking-tight mt-4">
-              3 filings
+              {t({ en: "3 filings", zh: "找到 3 項" })}
             </h4>
             <h4 className="text-3xl font-medium text-neutral-900 leading-none tracking-tight mb-4">
-              found
+              {t({ en: "found", zh: "應申報" })}
             </h4>
             <p className="text-sm text-neutral-500 leading-snug mb-8">
-              Single-member LLC with a foreign owner. Drafts are ready for review.
+              {t({ en: "Single-member LLC with a foreign owner. Drafts are ready for review.", zh: "外國人持有的單人 LLC，草稿已經可以審核。" })}
             </p>
 
             {/* Project Card */}
@@ -152,6 +155,7 @@ function StepByStepCard(): ReactNode {
 }
 
 function ProjectCardContent(): ReactNode {
+  const { t } = useLang();
   return (
     <>
       <svg
@@ -177,15 +181,15 @@ function ProjectCardContent(): ReactNode {
       <div className="relative z-10 flex items-start justify-between gap-3 h-full">
         <div>
           <p className="text-base font-semibold text-neutral-900">Form 5472</p>
-          <p className="text-base font-semibold text-neutral-900">+ pro forma 1120</p>
+          <p className="text-base font-semibold text-neutral-900">{t({ en: "+ pro forma 1120", zh: "+ 形式上的 1120" })}</p>
         </div>
         <CircleAlert className="opacity-40 text-black" aria-hidden="true" />
       </div>
 
       <div className="absolute bottom-3 left-5 flex items-center gap-2 text-neutral-700 text-xs tracking-widest" aria-hidden="true">
-        <span>DUE</span>
+        <span>{t({ en: "DUE", zh: "到期" })}</span>
         <span>•</span>
-        <span>APR 15</span>
+        <span>{t({ en: "APR 15", zh: "4/15" })}</span>
         <span>•</span>
         <span>$25K</span>
       </div>
@@ -194,6 +198,7 @@ function ProjectCardContent(): ReactNode {
 }
 
 function DashboardCard(): ReactNode {
+  const { t } = useLang();
   return (
     <motion.div
       {...cardAnimation}
@@ -202,10 +207,10 @@ function DashboardCard(): ReactNode {
     >
       <div className="relative z-10 max-w-48 transition-transform duration-500 ease-out group-hover:scale-105">
         <h3 className="text-xl md:text-2xl whitespace-nowrap font-medium text-card-foreground leading-tight mb-3">
-          Deadlines & Penalties
+          {t({ en: "Deadlines & Penalties", zh: "期限與罰則" })}
         </h3>
         <p className="text-card-foreground-muted text-sm">
-          Every filing comes with its due date and what it costs to miss it
+          {t({ en: "Every filing comes with its due date and what it costs to miss it", zh: "每一項申報都附上到期日，以及漏報的代價" })}
         </p>
       </div>
 
@@ -217,28 +222,28 @@ function DashboardCard(): ReactNode {
             <div className="bg-white rounded-full px-2 py-1.5 mb-3 flex items-center gap-1.5 border border-neutral-200">
               <span className="text-neutral-400 text-xs">Lanyu Labs LLC</span>
             </div>
-            <p className="text-xs text-neutral-500 mb-0.5">Next deadline</p>
-            <p className="text-xl font-medium text-neutral-900 mb-3">23 days</p>
+            <p className="text-xs text-neutral-500 mb-0.5">{t({ en: "Next deadline", zh: "下個期限" })}</p>
+            <p className="text-xl font-medium text-neutral-900 mb-3">{t({ en: "23 days", zh: "23 天" })}</p>
 
             <div className="flex gap-1.5 mb-4">
-              <span className="bg-brand text-white text-xs px-2.5 py-1 rounded-full">
-                Federal
+              <span className="bg-brand text-white text-xs px-2.5 py-1 rounded-full whitespace-nowrap">
+                {t({ en: "Federal", zh: "聯邦" })}
               </span>
-              <span className="text-neutral-400 text-xs px-2 py-1">Delaware</span>
-              <span className="text-neutral-400 text-xs px-2 py-1">Taiwan</span>
+              <span className="text-neutral-400 text-xs px-2 py-1 whitespace-nowrap">{t({ en: "Delaware", zh: "Delaware" })}</span>
+              <span className="text-neutral-400 text-xs px-2 py-1 whitespace-nowrap">{t({ en: "Taiwan", zh: "台灣" })}</span>
             </div>
           </div>
         </PhoneMockup>
 
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 bg-brand-deep rounded-2xl px-5 py-3 shadow-xl z-20 whitespace-nowrap">
           <div className="flex items-center gap-2 mb-0.5">
-            <span className="text-brand-ink/80 text-xs">If you miss it</span>
+            <span className="text-brand-ink/80 text-xs">{t({ en: "If you miss it", zh: "如果漏報" })}</span>
             <Info className="size-3.5 text-brand-ink/60" aria-hidden="true" />
           </div>
           <div className="flex items-center gap-3">
             <span className="text-lg font-medium text-white">$25,000</span>
             <span className="text-xs font-medium text-accent bg-accent/20 px-2 py-0.5 rounded">
-              per form
+              {t({ en: "per form", zh: "每張" })}
             </span>
           </div>
         </div>
@@ -248,6 +253,7 @@ function DashboardCard(): ReactNode {
 }
 
 function TrustedByCard(): ReactNode {
+  const { t } = useLang();
   return (
     <motion.div
       {...cardAnimation}
@@ -256,10 +262,10 @@ function TrustedByCard(): ReactNode {
     >
       <div className="transition-transform duration-500 ease-out group-hover:scale-110">
         <h3 className="text-2xl md:text-3xl font-medium text-card-foreground leading-tight mb-1">
-          10+ US filings
+          {t({ en: "10+ US filings", zh: "追蹤 10 種以上" })}
         </h3>
         <h3 className="text-2xl md:text-3xl font-medium text-card-foreground leading-tight mb-5">
-          tracked
+          {t({ en: "tracked", zh: "美國申報" })}
         </h3>
       </div>
 
@@ -269,13 +275,14 @@ function TrustedByCard(): ReactNode {
 
       <div className="flex items-center gap-2 mt-5 text-card-foreground-muted transition-transform duration-500 ease-out group-hover:scale-105">
         <ShieldCheck className="size-4" aria-hidden="true" />
-        <span className="text-xs font-medium">Every rule links to an official source</span>
+        <span className="text-xs font-medium">{t({ en: "Every rule links to an official source", zh: "每條規則都附官方來源" })}</span>
       </div>
     </motion.div>
   );
 }
 
 function IntegrationsCard(): ReactNode {
+  const { t } = useLang();
   return (
     <motion.div
       {...cardAnimation}
@@ -284,10 +291,10 @@ function IntegrationsCard(): ReactNode {
     >
       <div className="mb-auto transition-transform duration-500 ease-out group-hover:scale-105">
         <h3 className="text-xl md:text-2xl font-medium text-white leading-tight mb-2">
-          Both sides of the Pacific
+          {t({ en: "Both sides of the Pacific", zh: "太平洋兩岸一起顧" })}
         </h3>
         <p className="text-brand-ink text-sm">
-          US filings plus the Taiwan tax effects other services ignore
+          {t({ en: "US filings plus the Taiwan tax effects other services ignore", zh: "美國申報，加上其他服務不管的台灣稅務影響" })}
         </p>
       </div>
 

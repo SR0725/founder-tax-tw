@@ -4,37 +4,47 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { Upload, ListChecks, FileText, ClipboardCheck } from "lucide-react";
 import type { ReactNode } from "react";
+import { useLang } from "@/lib/i18n";
 
 const steps = [
   {
     icon: Upload,
-    title: "Upload your exports",
-    description:
-      "Drop in your Stripe export and bank statements. We read the money flows between you and your company.",
+    title: { en: "Upload your exports", zh: "上傳匯出檔" },
+    description: {
+      en: "Drop in your Stripe export and bank statements. We read the money flows between you and your company.",
+      zh: "放進 Stripe 匯出檔和銀行對帳單，我們會讀出你和公司之間的每一筆金流。",
+    },
   },
   {
     icon: ListChecks,
-    title: "See what you owe",
-    description:
-      "Every filing your company owes, with its due date and the penalty for missing it. Rules come from a fixed rule table with official sources, not from the model.",
+    title: { en: "See what you owe", zh: "看清楚該報什麼" },
+    description: {
+      en: "Every filing your company owes, with its due date and the penalty for missing it. Rules come from a fixed rule table with official sources, not from the model.",
+      zh: "列出公司該報的每一項申報、到期日和漏報罰則。這些規則來自附官方來源的固定規則表，不是模型自己編的。",
+    },
   },
   {
     icon: FileText,
-    title: "Get draft filings",
-    description:
-      "AI fills in the drafts and flags every field it is unsure about, with the reason next to it.",
+    title: { en: "Get draft filings", zh: "拿到申報草稿" },
+    description: {
+      en: "AI fills in the drafts and flags every field it is unsure about, with the reason next to it.",
+      zh: "AI 填好草稿，把每個沒把握的欄位標出來，旁邊附上原因。",
+    },
   },
   {
     icon: ClipboardCheck,
-    title: "Review, then sign",
-    description:
-      "A review checklist lets a non-CPA reviewer confirm each item. A licensed CPA only signs the final version.",
+    title: { en: "Review, then sign", zh: "審核，然後簽名" },
+    description: {
+      en: "A review checklist lets a non-CPA reviewer confirm each item. A licensed CPA only signs the final version.",
+      zh: "沒有執照的審核員照著清單逐項確認，有執照的會計師只需要簽最後一版。",
+    },
   },
 ];
 
 const ease = [0.23, 1, 0.32, 1] as const;
 
 export function HowItWorks(): ReactNode {
+  const { t } = useLang();
   const listRef = useRef<HTMLOListElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -49,13 +59,13 @@ export function HowItWorks(): ReactNode {
       <div className="mx-auto max-w-5xl px-6 py-20 sm:py-28">
         <div className="grid gap-8 lg:grid-cols-2 lg:items-end lg:gap-20">
           <h2 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-            How it works
+            {t({ en: "How it works", zh: "運作方式" })}
           </h2>
           <div>
             <p className="max-w-md text-lg leading-relaxed text-foreground/60">
-              One flow from raw exports to a filing your CPA can sign.{" "}
+              {t({ en: "One flow from raw exports to a filing your CPA can sign.", zh: "從原始匯出檔一路做到會計師可以簽名的申報書。" })}{" "}
               <span className="font-medium text-foreground">
-                The CPA signs. They don&apos;t do the busywork.
+                {t({ en: "The CPA signs. They don't do the busywork.", zh: "會計師只負責簽名，不用做雜事。" })}
               </span>
             </p>
             <motion.a
@@ -64,7 +74,7 @@ export function HowItWorks(): ReactNode {
               whileTap={{ scale: 0.98 }}
               className="mt-6 inline-flex items-center rounded-xl bg-foreground px-6 py-3 text-sm font-semibold text-background transition-colors hover:bg-foreground/90"
             >
-              See what we cover
+              {t({ en: "See what we cover", zh: "看看涵蓋範圍" })}
             </motion.a>
           </div>
         </div>
@@ -83,7 +93,7 @@ export function HowItWorks(): ReactNode {
             const Icon = step.icon;
             return (
               <motion.li
-                key={step.title}
+                key={step.title.en}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
@@ -97,8 +107,8 @@ export function HowItWorks(): ReactNode {
                   <Icon className="h-5 w-5 text-white" strokeWidth={2} />
                 </div>
                 <div className="pt-1 md:pt-6">
-                  <h3 className="text-xl font-semibold text-foreground">{step.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-foreground/60">{step.description}</p>
+                  <h3 className="text-xl font-semibold text-foreground">{t(step.title)}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-foreground/60">{t(step.description)}</p>
                 </div>
               </motion.li>
             );

@@ -1,11 +1,11 @@
 {
-  "name": "Your Site Name",
-  "short_name": "Site",
-  "description": "A modern, accessible landing page template built with Next.js, Tailwind CSS, and TypeScript.",
+  "name": "GoTax",
+  "short_name": "GoTax",
+  "description": "US tax compliance for Taiwanese founders with a Delaware company. Not tax advice.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#a8d946",
+  "background_color": "#f6f5f1",
+  "theme_color": "#24509c",
   "icons": [
     {
       "src": "/icon-192.png",

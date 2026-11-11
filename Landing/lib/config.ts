@@ -9,7 +9,7 @@
 
 export const siteConfig = {
   // Brand
-  name: "Founder Tax TW",
+  name: "GoTax",
   tagline: "US tax compliance for Taiwanese founders",
   description: "See which US filings your company owes, when they are due, and what missing them costs.",
   
@@ -89,7 +89,7 @@ export const footerConfig = {
     placeholder: "Enter your email",
     button: "Join Waitlist",
   },
-  copyright: `© ${new Date().getFullYear()} Founder Tax TW. Not tax advice.`,
+  copyright: `© ${new Date().getFullYear()} GoTax. Not tax advice.`,
 };
 
 /**

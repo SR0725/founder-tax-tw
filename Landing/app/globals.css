@@ -21,7 +21,7 @@
   --card-foreground: #0d1526;
   --card-foreground-muted: #4a5470;
   --phone-screen: #f6f5f1;
-  --font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-geist-sans), "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
@@ -106,6 +106,20 @@ html {
     radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.16) 1px, transparent 1.6px),
     radial-gradient(120% 80% at 50% 0%, #2e62b8 0%, var(--brand) 55%, #1c3f7d 100%);
   background-size: 18px 18px, 100% 100%;
+}
+
+/* Hero base: the colonial-blue field without the dot screen (dots are drawn on canvas) */
+.hero-base {
+  background: radial-gradient(120% 80% at 50% 0%, #2e62b8 0%, var(--brand) 55%, #1c3f7d 100%);
+}
+
+@keyframes sheet-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(0.6deg); }
+}
+
+.hero-sheet-float {
+  animation: sheet-float 8s ease-in-out infinite;
 }
 
 /* Ruled form lines that sit under the hero copy, like the field rows of an IRS form */

@@ -34,4 +34,4 @@ Flow: upload Stripe export + bank statements → obligations, deadlines, penalti
 
 ## Open decisions
 
-- Final product name (working name: Founder Tax TW).
+- Final product name (working name: GoTax).

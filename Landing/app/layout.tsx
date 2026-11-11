@@ -65,13 +65,6 @@ export default function RootLayout({
           
           <Header />
           <ThemeSwitch />
-          
-          <div
-            className="fixed bottom-6 right-20 z-50 rounded-full bg-foreground px-4 py-2 text-xs font-semibold tracking-wide text-background shadow-lg"
-            role="note"
-          >
-            Not tax advice
-          </div>
 
           <SkipToContent />
           {children}

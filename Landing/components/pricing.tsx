@@ -3,44 +3,45 @@
 import { motion } from "motion/react";
 import { Check } from "lucide-react";
 import type { ReactNode } from "react";
+import { useLang } from "@/lib/i18n";
 
 const plans = [
   {
-    name: "Single-member LLC",
+    name: { en: "Single-member LLC", zh: "單人 LLC" },
     price: "5472",
-    priceLabel: "+ pro forma 1120",
-    description: "One foreign owner, the most common setup for Taiwanese founders",
+    priceLabel: { en: "+ pro forma 1120", zh: "+ 形式上的 1120" },
+    description: { en: "One foreign owner, the most common setup for Taiwanese founders", zh: "一位外國股東，台灣創辦人最常見的架構" },
     features: [
-      "Form 5472 + pro forma 1120 · Apr 15",
-      "Form 7004 extension · Oct 15",
-      "Delaware annual tax · Jun 1",
-      "Taiwan CFC check",
+      { en: "Form 5472 + pro forma 1120 · Apr 15", zh: "Form 5472 + 形式上的 1120 · 4/15" },
+      { en: "Form 7004 extension · Oct 15", zh: "Form 7004 延期 · 10/15" },
+      { en: "Delaware annual tax · Jun 1", zh: "Delaware 年度稅 · 6/1" },
+      { en: "Taiwan CFC check", zh: "台灣 CFC 檢查" },
     ],
     popular: true,
   },
   {
-    name: "Multi-member LLC",
+    name: { en: "Multi-member LLC", zh: "多人 LLC" },
     price: "1065",
-    priceLabel: "+ K-1 per partner",
-    description: "Two or more owners, taxed as a partnership",
+    priceLabel: { en: "+ K-1 per partner", zh: "+ 每位合夥人一張 K-1" },
+    description: { en: "Two or more owners, taxed as a partnership", zh: "兩位以上股東，以合夥方式課稅" },
     features: [
-      "Form 1065 + Schedule K-1 · Mar 15",
-      "Form 8804 / 8805 for foreign partners",
-      "Delaware annual tax · Jun 1",
-      "Taiwan overseas income check",
+      { en: "Form 1065 + Schedule K-1 · Mar 15", zh: "Form 1065 + Schedule K-1 · 3/15" },
+      { en: "Form 8804 / 8805 for foreign partners", zh: "外國合夥人的 Form 8804 / 8805" },
+      { en: "Delaware annual tax · Jun 1", zh: "Delaware 年度稅 · 6/1" },
+      { en: "Taiwan overseas income check", zh: "台灣海外所得檢查" },
     ],
     popular: false,
   },
   {
-    name: "C-Corp",
+    name: { en: "C-Corp", zh: "C-Corp" },
     price: "1120",
-    priceLabel: "corporate return",
-    description: "The usual setup for venture-backed startups",
+    priceLabel: { en: "corporate return", zh: "公司所得稅申報" },
+    description: { en: "The usual setup for venture-backed startups", zh: "拿創投資金的新創常用架構" },
     features: [
-      "Form 1120 · Apr 15",
-      "Form 5472 if 25%+ foreign-owned",
-      "Delaware franchise tax · Mar 1",
-      "1099-NEC for US contractors",
+      { en: "Form 1120 · Apr 15", zh: "Form 1120 · 4/15" },
+      { en: "Form 5472 if 25%+ foreign-owned", zh: "外資持股 25% 以上要報 Form 5472" },
+      { en: "Delaware franchise tax · Mar 1", zh: "Delaware 特許稅 · 3/1" },
+      { en: "1099-NEC for US contractors", zh: "付給美國承包商要報 1099-NEC" },
     ],
     popular: false,
   },
@@ -55,6 +56,7 @@ function PricingCard({
   plan: (typeof plans)[0];
   index: number;
 }): ReactNode {
+  const { t } = useLang();
   const isPopular = plan.popular;
 
   return (
@@ -77,22 +79,22 @@ function PricingCard({
         {isPopular && (
           <div className="absolute -top-4 left-1/2 -translate-x-1/2">
             <span className="inline-block rounded-full bg-brand px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-white">
-              Most common
+              {t({ en: "Most common", zh: "最常見" })}
             </span>
           </div>
         )}
 
-        <h3 className="text-xl font-semibold text-foreground">{plan.name}</h3>
+        <h3 className="text-xl font-semibold text-foreground">{t(plan.name)}</h3>
 
         <div className="mt-4">
           <div className="flex items-end gap-3">
             <span className="text-5xl font-bold tracking-tight text-foreground">
               {plan.price}
             </span>
-            <span className="mb-1 text-sm text-muted-foreground">{plan.priceLabel}</span>
+            <span className="mb-1 text-sm text-muted-foreground">{t(plan.priceLabel)}</span>
           </div>
           <p className="mt-2 text-sm text-muted-foreground">
-            {plan.description}
+            {t(plan.description)}
           </p>
         </div>
 
@@ -106,19 +108,19 @@ function PricingCard({
               : "bg-muted text-foreground hover:bg-muted/80"
           }`}
         >
-          Check my company
+          {t({ en: "Check my company", zh: "檢查我的公司" })}
         </motion.a>
 
         <div className="mt-8">
-          <p className="text-sm font-medium text-muted-foreground">What we check:</p>
+          <p className="text-sm font-medium text-muted-foreground">{t({ en: "What we check:", zh: "我們會檢查：" })}</p>
           <ul className="mt-4 space-y-3">
             {plan.features.map((feature) => (
-              <li key={feature} className="flex items-center gap-3">
+              <li key={feature.en} className="flex items-center gap-3">
                 <Check
                   className="h-4 w-4 shrink-0 text-foreground"
                   strokeWidth={2.5}
                 />
-                <span className="text-sm text-foreground">{feature}</span>
+                <span className="text-sm text-foreground">{t(feature)}</span>
               </li>
             ))}
           </ul>
@@ -129,6 +131,7 @@ function PricingCard({
 }
 
 export function Coverage(): ReactNode {
+  const { t } = useLang();
   return (
     <section id="coverage" className="w-full bg-background px-6 py-20 sm:py-28 scroll-mt-24">
       <div className="mx-auto max-w-5xl">
@@ -140,17 +143,16 @@ export function Coverage(): ReactNode {
           className="mb-12 text-center sm:mb-16"
         >
           <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
-            Pick your company type
+            {t({ en: "Pick your company type", zh: "選擇你的公司型態" })}
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg">
-            Each company type owes a different set of filings. Draft rules,
-            still being verified against official sources.
+            {t({ en: "Each company type owes a different set of filings. Draft rules, still being verified against official sources.", zh: "不同公司型態要報的表不一樣。以下規則仍是草稿，正在對照官方來源查證。" })}
           </p>
         </motion.div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           {plans.map((plan, index) => (
-            <PricingCard key={plan.name} plan={plan} index={index} />
+            <PricingCard key={plan.name.en} plan={plan} index={index} />
           ))}
         </div>
       </div>

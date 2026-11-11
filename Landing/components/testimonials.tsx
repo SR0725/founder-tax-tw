@@ -3,45 +3,59 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useState, useEffect, type ReactNode } from "react";
 import { FormDoc } from "@/components/form-doc";
+import { useLang } from "@/lib/i18n";
 
 const testimonials = [
   {
     code: "5472",
-    quote:
-      "A foreign-owned single-member LLC files Form 5472 with a pro forma Form 1120, even in a year with zero revenue.",
-    name: "Form 5472",
-    title: "Due Apr 15 · $25,000 penalty per missed form",
+    quote: {
+      en: "A foreign-owned single-member LLC files Form 5472 with a pro forma Form 1120, even in a year with zero revenue.",
+      zh: "外國人持有的單人 LLC，每年都要報 Form 5472，外加一張形式上的 Form 1120。就算整年零營收也要報。",
+    },
+    name: { en: "Form 5472", zh: "Form 5472" },
+    title: { en: "Due Apr 15 · $25,000 penalty per missed form", zh: "4/15 到期 · 每漏一張罰 $25,000" },
     company: "IRS",
   },
   {
     code: "1065",
-    quote:
-      "A multi-member LLC files Form 1065 and a Schedule K-1 for every partner. The late penalty is charged per partner, per month.",
-    name: "Form 1065",
-    title: "Due Mar 15 · penalty grows every month",
+    quote: {
+      en: "A multi-member LLC files Form 1065 and a Schedule K-1 for every partner. The late penalty is charged per partner, per month.",
+      zh: "多人 LLC 要報 Form 1065，並發給每位合夥人一張 Schedule K-1。晚報的罰款按合夥人人數、按月計算。",
+    },
+    name: { en: "Form 1065", zh: "Form 1065" },
+    title: { en: "Due Mar 15 · penalty grows every month", zh: "3/15 到期 · 罰款每個月往上加" },
     company: "IRS",
   },
   {
     code: "DE",
-    quote:
-      "Delaware LLCs owe a flat annual tax by June 1. C-Corps file a franchise tax and annual report by March 1.",
-    name: "Delaware",
-    title: "LLC $300 by Jun 1 · C-Corp due Mar 1",
+    quote: {
+      en: "Delaware LLCs owe a flat annual tax by June 1. C-Corps file a franchise tax and annual report by March 1.",
+      zh: "Delaware 的 LLC 每年 6/1 前要繳固定的年度稅；C-Corp 則要在 3/1 前繳特許稅並交年度報告。",
+    },
+    name: { en: "Delaware", zh: "Delaware" },
+    title: { en: "LLC $300 by Jun 1 · C-Corp due Mar 1", zh: "LLC 6/1 前繳 $300 · C-Corp 3/1 到期" },
     company: "Delaware",
   },
   {
     code: "TW",
-    quote:
-      "Your US LLC pays no corporate tax, so Taiwan may treat it as a low-tax entity under its CFC rules. We flag it so you can confirm with a Taiwanese accountant.",
-    name: "Taiwan CFC",
-    title: "We flag it, a local accountant confirms",
+    quote: {
+      en: "Your US LLC pays no corporate tax, so Taiwan may treat it as a low-tax entity under its CFC rules. We flag it so you can confirm with a Taiwanese accountant.",
+      zh: "美國 LLC 本身不繳公司稅，台灣的受控外國企業（CFC）規定可能把它視為低稅負地區的公司。我們會標出來，讓你找台灣會計師確認。",
+    },
+    name: { en: "Taiwan CFC", zh: "台灣 CFC" },
+    title: { en: "We flag it, a local accountant confirms", zh: "我們標出來，台灣會計師確認" },
     company: "Taiwan",
   },
 ];
 
-const companies = [{ name: "IRS" }, { name: "Delaware" }, { name: "Taiwan" }];
+const companies = [
+  { name: "IRS", label: { en: "IRS", zh: "IRS" } },
+  { name: "Delaware", label: { en: "Delaware", zh: "Delaware" } },
+  { name: "Taiwan", label: { en: "Taiwan", zh: "台灣" } },
+];
 
 export function Obligations(): ReactNode {
+  const { t } = useLang();
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
@@ -62,7 +76,7 @@ export function Obligations(): ReactNode {
           transition={{ duration: 0.4 }}
           className="mb-16 text-4xl leading-tight font-medium text-neutral-900 sm:text-5xl lg:mb-20 lg:text-6xl dark:text-neutral-50"
         >
-          The filings nobody warns you about
+          {t({ en: "The filings nobody warns you about", zh: "沒人提醒你的那些申報" })}
         </motion.h2>
 
         <div className="mb-16 grid gap-8 lg:mb-20 lg:grid-cols-2 lg:gap-12">
@@ -115,12 +129,12 @@ export function Obligations(): ReactNode {
                   transition={{ duration: 0.5 }}
                 >
                   <p className="mb-6 text-xl leading-relaxed text-neutral-700 dark:text-neutral-300">
-                    {testimonials[activeIndex].quote}
+                    {t(testimonials[activeIndex].quote)}
                   </p>
                   <div className="text-base font-medium text-neutral-900 sm:text-lg dark:text-neutral-100">
-                    {testimonials[activeIndex].name},{" "}
+                    {t(testimonials[activeIndex].name)},{" "}
                     <span className="text-neutral-600 dark:text-neutral-400">
-                      {testimonials[activeIndex].title}
+                      {t(testimonials[activeIndex].title)}
                     </span>
                   </div>
                 </motion.div>
@@ -147,7 +161,7 @@ export function Obligations(): ReactNode {
                     isActive ? "opacity-100" : "opacity-25 hover:opacity-60"
                   }`}
                 >
-                  {company.name}
+                  {t(company.label)}
                 </span>
               </motion.div>
             );
@@ -155,7 +169,7 @@ export function Obligations(): ReactNode {
         </div>
 
         <p className="mt-12 text-sm text-neutral-500 dark:text-neutral-400">
-          Rules are drafts and still being checked against official IRS, Delaware and Taiwan sources. Not tax advice.
+          {t({ en: "Rules are drafts and still being checked against official IRS, Delaware and Taiwan sources. Not tax advice.", zh: "規則仍是草稿，正在對照 IRS、Delaware 與台灣的官方來源查證。本頁不構成稅務建議。" })}
         </p>
       </div>
     </section>

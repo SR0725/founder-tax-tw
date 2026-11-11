@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 
 export const siteConfig = {
-  name: "Founder Tax TW",
+  name: "GoTax",
   description:
     "US tax compliance for Taiwanese founders with a Delaware company. See which forms you owe, when they are due, and what missing them costs. Not tax advice.",
   url: "https://example.com",
   ogImage: "/og-image.png",
-  creator: "Founder Tax TW",
+  creator: "GoTax",
   authors: [
     {
-      name: "Founder Tax TW",
+      name: "GoTax",
       url: "https://github.com/SR0725/founder-tax-tw",
     },
   ],
@@ -77,11 +77,6 @@ export const baseMetadata: Metadata = {
     description: siteConfig.description,
     images: [siteConfig.ogImage],
     creator: siteConfig.creator,
-  },
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-icon.png",
   },
   manifest: "/site.webmanifest",
 };

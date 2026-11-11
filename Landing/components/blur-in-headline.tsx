@@ -2,14 +2,19 @@
 
 import { useRef, useEffect, useState } from "react";
 import type { ReactNode } from "react";
+import { useLang } from "@/lib/i18n";
 
-const headline =
-  "Opening a Delaware company takes an afternoon. Then nobody tells you which forms to file each year, when they are due, or that missing one can cost $25,000. We turn that into one flow, for both sides of the Pacific.";
+const headline = {
+  en: "Opening a Delaware company takes an afternoon. Then nobody tells you which forms to file each year, when they are due, or that missing one can cost $25,000. We turn that into one flow, for both sides of the Pacific.",
+  zh: "開一家 Delaware 公司只要一個下午。之後卻沒有人告訴你，每年該報哪些表、什麼時候到期，漏報一張可能就罰 25,000 美元。我們把這件事做成一條流程，台灣和美國兩邊一起顧好。",
+};
 
 export function BlurInHeadline(): ReactNode {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const words = headline.split(" ");
+  const { lang } = useLang();
+  // Chinese has no spaces: reveal it character by character instead of word by word.
+  const words = lang === "zh" ? Array.from(headline.zh) : headline.en.split(" ");
 
   useEffect(() => {
     const container = containerRef.current;
@@ -65,7 +70,7 @@ export function BlurInHeadline(): ReactNode {
             return (
               <span
                 key={index}
-                className="mr-2 inline-block lg:mr-3"
+                className={lang === "zh" ? "inline-block" : "mr-2 inline-block lg:mr-3"}
                 style={{ 
                   opacity,
                   filter: `blur(${blur}px)`,
