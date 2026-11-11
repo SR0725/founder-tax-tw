@@ -35,7 +35,7 @@ function LangToggle({ className = "" }: { className?: string }): ReactNode {
     <div
       role="group"
       aria-label="Language / 語言"
-      className={`relative inline-flex items-center rounded-full bg-foreground/5 p-1 text-xs font-semibold ${className}`}
+      className={`inline-flex items-center rounded-full bg-foreground/5 p-1 text-xs font-semibold ${className}`}
     >
       {(["en", "zh"] as const).map((l) => (
         <button
@@ -43,15 +43,8 @@ function LangToggle({ className = "" }: { className?: string }): ReactNode {
           type="button"
           onClick={() => setLang(l)}
           aria-pressed={lang === l}
-          className={`relative z-10 rounded-full px-2.5 py-1.5 transition-colors ${lang === l ? "text-white" : "text-foreground/60 hover:text-foreground"}`}
+          className={`rounded-full px-2.5 py-1.5 transition-colors duration-300 ${lang === l ? "bg-brand text-white shadow-sm" : "text-foreground/60 hover:text-foreground"}`}
         >
-          {lang === l && (
-            <motion.span
-              layoutId="lang-pill"
-              className="absolute inset-0 -z-10 rounded-full bg-brand"
-              transition={{ type: "spring", stiffness: 500, damping: 35 }}
-            />
-          )}
           {l === "en" ? "EN" : "中文"}
         </button>
       ))}
