@@ -1,0 +1,7 @@
+# Pushing `dev` deploys to https://gotax-staging.ray-realms.com (AWS Taipei, staging host).
+on: { push: { branches: [dev] } }
+jobs:
+  deploy:
+    uses: SR0725/ray-infra/.github/workflows/deploy-service.yml@main
+    with: { service: gotax }
+    permissions: { id-token: write, contents: read }
