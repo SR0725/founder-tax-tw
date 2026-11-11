@@ -11,6 +11,7 @@ import {
   parseCsv,
   type Classified,
   type Draft,
+  type Lang,
   type Txn,
 } from "@/lib/draft";
 
@@ -46,7 +47,7 @@ Categories:
 
 Mark confidence "low" whenever a careful preparer would want a document or an answer from the founder before signing: an unclear sender, a memo that suggests a loan with no agreement, a reimbursement with no receipt, a related-company payment with no invoice. Being wrong here costs the founder $25,000, so prefer "low" over a confident guess.
 
-Write each reason as one or two plain sentences addressed to the reviewer. Say what you saw and what would settle it. Return exactly one entry per transaction id you were given.`;
+Write each reason as one or two plain sentences addressed to the reviewer. Say what you saw and what would settle it. Return exactly one entry per transaction id you were given. In a reason, refer to another transaction by its date and amount, never by its id.`;
 
 // The CLI rejects a schema that carries a "$schema" URI, so strip it.
 const { $schema: _ignored, ...SCHEMA } = z.toJSONSchema(Classification);
@@ -56,14 +57,18 @@ class ClaudeUnavailable extends Error {}
 
 // Runs the local Claude Code CLI in print mode with no tools, no MCP servers and no user
 // settings, so it behaves as a plain model call that returns schema-checked JSON.
-function runClaude(prompt: string): Promise<unknown> {
+function runClaude(prompt: string, lang: Lang): Promise<unknown> {
+  const system =
+    lang === "zh"
+      ? `${SYSTEM}\n\nWrite every reason in Traditional Chinese as used in Taiwan (繁體中文、台灣用語). Keep form names, company names and bank descriptions in their original English.`
+      : SYSTEM;
   const args = [
     "-p",
     "--model", MODEL,
     "--effort", "low",
     "--output-format", "json",
     "--json-schema", JSON.stringify(SCHEMA),
-    "--system-prompt", SYSTEM,
+    "--system-prompt", system,
     "--tools", "",
     "--strict-mcp-config",
     "--setting-sources", "",
@@ -96,13 +101,14 @@ function runClaude(prompt: string): Promise<unknown> {
   });
 }
 
-async function classifyWithClaude(txns: Txn[], relatedCompanies: string[]): Promise<Classified[]> {
+async function classifyWithClaude(txns: Txn[], relatedCompanies: string[], lang: Lang): Promise<Classified[]> {
+  const zh = lang === "zh";
   const raw = await runClaude(`Company: Kuroshio Studio LLC (Wyoming, formed 2026-08-04).
 Sole owner: ${OWNER.name}, tax resident of ${OWNER.country}.
 Other companies the owner holds a stake in: ${relatedCompanies.join(", ")}.
 
 Bank transactions for the tax year (positive = money in):
-${JSON.stringify(txns, null, 2)}`);
+${JSON.stringify(txns, null, 2)}`, lang);
 
   const parsed = Classification.safeParse(raw);
   if (!parsed.success) throw new ClaudeUnavailable("Claude's answer did not match the expected shape");
@@ -112,7 +118,7 @@ ${JSON.stringify(txns, null, 2)}`);
     const c = byId.get(t.id);
     // A transaction the model skipped is surfaced for review rather than silently dropped.
     if (!c) {
-      return { ...t, category: "unknown", reportable: false, confidence: "low", reason: "The model returned no classification for this row." };
+      return { ...t, category: "unknown", reportable: false, confidence: "low", reason: zh ? "模型沒有回傳這一列的分類。" : "The model returned no classification for this row." };
     }
     return { ...t, category: c.category, reportable: isReportable(c.category), confidence: c.confidence, reason: c.reason };
   });
@@ -120,11 +126,14 @@ ${JSON.stringify(txns, null, 2)}`);
 
 export async function POST(request: Request) {
   let txns: Txn[];
+  let lang: Lang = "en";
   try {
-    const body = (await request.json()) as { csv?: string };
-    txns = parseCsv(body.csv ?? "");
+    const body = (await request.json()) as { csv?: string; lang?: string };
+    lang = body.lang === "zh" ? "zh" : "en";
+    txns = parseCsv(body.csv ?? "", lang);
   } catch (error) {
-    const message = error instanceof CsvError ? error.message : "We couldn't read that upload.";
+    const fallback = lang === "zh" ? "讀不懂這次上傳的內容。" : "We couldn't read that upload.";
+    const message = error instanceof CsvError ? error.message : fallback;
     return Response.json({ error: message }, { status: 400 });
   }
 
@@ -133,22 +142,23 @@ export async function POST(request: Request) {
 
   let classified: Classified[];
   let source: Draft["source"] = "claude";
-  let sourceNote = "Transactions classified by Claude. Totals computed in code.";
+  const zh = lang === "zh";
+  let sourceNote = zh ? "交易由 Claude 分類，金額加總由程式計算。" : "Transactions classified by Claude. Totals computed in code.";
 
   try {
-    classified = await classifyWithClaude(txns, related);
+    classified = await classifyWithClaude(txns, related, lang);
   } catch (error) {
     if (!(error instanceof ClaudeUnavailable)) throw error;
-    classified = classifyWithRules(txns, OWNER.name, related);
+    classified = classifyWithRules(txns, OWNER.name, related, lang);
     source = "rules";
-    sourceNote = `${error.message}, so keyword rules were used.`;
+    sourceNote = zh ? "這台電腦目前無法使用 Claude，改用關鍵字規則分類。" : `${error.message}, so keyword rules were used.`;
   }
 
   const draft: Draft = {
     source,
     sourceNote,
     transactions: classified,
-    ...buildDraft(classified, { name: company.name, state: company.state }, OWNER),
+    ...buildDraft(classified, { name: company.name, state: company.state }, OWNER, lang),
   };
   return Response.json(draft);
 }
