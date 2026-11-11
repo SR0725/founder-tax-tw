@@ -39,11 +39,21 @@ const testimonials = [
   {
     code: "TW",
     quote: {
-      en: "Your US LLC pays no corporate tax, so Taiwan may treat it as a low-tax entity under its CFC rules. We flag it so you can confirm with a Taiwanese accountant.",
-      zh: "美國 LLC 本身不繳公司稅，台灣的受控外國企業（CFC）規定可能把它視為低稅負地區的公司。我們會標出來，讓你找台灣會計師確認。",
+      en: "Bringing money home is not what Taiwan taxes. The income is. A dividend or distribution from your US company is overseas income. Once your household's overseas income reaches NT$1M in a year, it joins your basic income, and anything above NT$7.5M is taxed at 20%. US tax already paid on it can be credited.",
+      zh: "台灣課的不是「把錢匯回來」這個動作，而是那筆所得。美國公司發給你的股利或盈餘分配屬於海外所得。全戶一年的海外所得達新臺幣 100 萬元，就要計入基本所得額；基本所得額超過 750 萬元的部分，按 20% 課基本稅額。這筆錢已經在美國繳的稅可以扣抵。",
+    },
+    name: { en: "Taiwan overseas income", zh: "台灣海外所得" },
+    title: { en: "Filed with your May individual return", zh: "隨 5 月綜所稅一起申報" },
+    company: "Taiwan",
+  },
+  {
+    code: "CFC",
+    quote: {
+      en: "Leaving the profit inside the company does not always help. Since 2023, if you and your family control 50% or more of a company in a low-tax place (a rate of 14% or less), its profit can count as your overseas income even when nothing is paid out. A US LLC pays no entity-level tax, which is why we flag it.",
+      zh: "把盈餘留在公司不一定就沒事。112 年起，你和家人合計持有低稅負地區（稅率 14% 以下）公司 50% 以上，或對它有重大影響力時，就算沒有分配，公司的盈餘也可能算成你的海外所得。美國 LLC 本身不繳公司稅，所以我們會特別標出來。",
     },
     name: { en: "Taiwan CFC", zh: "台灣 CFC" },
-    title: { en: "We flag it, a local accountant confirms", zh: "我們標出來，台灣會計師確認" },
+    title: { en: "Exempt with real operations or profit under NT$7M", zh: "有實質營運或盈餘 700 萬元以下可豁免" },
     company: "Taiwan",
   },
 ];

@@ -29,6 +29,13 @@ const faqs = [
     },
   },
   {
+    question: { en: "Do I owe Taiwan tax when I bring US revenue home?", zh: "美國營收匯回台灣要繳稅嗎？" },
+    answer: {
+      en: "It depends on how the money reaches you, not the wire itself. Salary for work you do in Taiwan is Taiwan-source income and goes on your regular return. Dividends and distributions are overseas income: under NT$1M a household year they stay out, above that they count toward the NT$7.5M basic income exemption, taxed at 20% beyond it. We show which bucket each payment falls in, and a Taiwanese accountant confirms.",
+      zh: "要看錢用什麼名目到你手上，跟匯款這個動作無關。你在台灣工作領的薪水是中華民國來源所得，照一般綜所稅申報。股利和盈餘分配則是海外所得：全戶一年未滿 100 萬元不用計入；達 100 萬元就要計入基本所得額，超過 750 萬元免稅額的部分按 20% 課稅。我們會標出每筆款項屬於哪一類，再交給台灣會計師確認。",
+    },
+  },
+  {
     question: { en: "What do I need to upload?", zh: "我需要上傳什麼？" },
     answer: {
       en: "Your Stripe export and your bank statements. We also ask for basics like company type, formation date, owners and their tax residency.",
