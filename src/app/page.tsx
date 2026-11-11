@@ -307,6 +307,11 @@ function Row({
               <li key={n}>{n}</li>
             ))}
           </ul>
+          {o.id === "5472" && (
+            <a href="/draft" className="mt-4 inline-block rounded-lg bg-stone-900 px-4 py-2 font-medium text-white">
+              Draft this filing
+            </a>
+          )}
           <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-stone-500">
             <span>Due {due.full}</span>
             {o.fee && <span>Fee {o.fee}</span>}
