@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { ChevronDown } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { useLang } from "@/lib/i18n";
+import { APP_URL } from "@/lib/config";
 
 const faqs = [
   {
@@ -133,7 +134,7 @@ export function FAQ(): ReactNode {
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <motion.a
-              href="#how-it-works"
+              href={APP_URL}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="inline-flex items-center rounded-xl bg-foreground px-6 py-2.5 text-sm font-semibold text-background transition-colors hover:bg-foreground/90"

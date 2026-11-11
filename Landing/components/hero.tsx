@@ -16,6 +16,7 @@ import { MotionConfig, motion } from "motion/react";
 import type { ReactNode } from "react";
 import { HeroBackdrop } from "@/components/hero-backdrop";
 import { useLang, type L } from "@/lib/i18n";
+import { APP_URL } from "@/lib/config";
 
 const ease = [0.23, 1, 0.32, 1] as const;
 
@@ -350,7 +351,7 @@ export function Hero(): ReactNode {
           </motion.p>
 
           <motion.a
-            href="#how-it-works"
+            href={APP_URL}
             className="group relative cursor-pointer inline-flex items-center max-[850px]:w-full"
             variants={fadeInScale}
             transition={{ duration: 0.8, ease }}

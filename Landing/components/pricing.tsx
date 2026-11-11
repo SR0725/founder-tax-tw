@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { Check } from "lucide-react";
 import type { ReactNode } from "react";
 import { useLang } from "@/lib/i18n";
+import { APP_URL } from "@/lib/config";
 
 const plans = [
   {
@@ -99,7 +100,7 @@ function PricingCard({
         </div>
 
         <motion.a
-          href="#how-it-works"
+          href={APP_URL}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           className={`mt-6 block w-full rounded-xl py-3 text-center text-sm font-semibold transition-colors ${

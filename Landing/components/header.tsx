@@ -4,6 +4,7 @@ import { ArrowDownRight, ChevronDown } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState, type ReactNode } from "react";
 import { useLang, type L } from "@/lib/i18n";
+import { APP_URL } from "@/lib/config";
 import { Logo } from "@/components/logo";
 
 const menus = {
@@ -222,7 +223,7 @@ export function Header(): ReactNode {
 
         <div className="flex items-center gap-4 max-[850px]:hidden">
           <LangToggle />
-          <a href="#how-it-works" className="group relative inline-flex items-center">
+          <a href={APP_URL} className="group relative inline-flex items-center">
             <span className="absolute right-0 inset-y-0 w-[calc(100%-1.5rem)] rounded-xl bg-accent" />
             <span className="relative z-10 px-5 py-3 rounded-xl bg-foreground text-background text-sm font-medium">{t(NAV.cta)}</span>
             <span className="relative -left-px z-10 w-10 h-10 rounded-xl flex items-center justify-center text-black">
@@ -278,7 +279,7 @@ export function Header(): ReactNode {
               </nav>
 
               <div className="flex items-center justify-end pt-8 pb-2">
-                <a href="#how-it-works" className="group relative inline-flex items-center" onClick={closeMobile}>
+                <a href={APP_URL} className="group relative inline-flex items-center" onClick={closeMobile}>
                   <span className="absolute right-0 inset-y-0 w-[calc(100%-1.5rem)] rounded-2xl bg-accent" />
                   <span className="relative z-10 px-5 py-3 rounded-2xl bg-foreground text-background text-sm font-medium">{t(NAV.cta)}</span>
                   <span className="relative -left-px z-10 w-10 h-10 rounded-2xl flex items-center justify-center text-foreground">

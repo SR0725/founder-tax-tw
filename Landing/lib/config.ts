@@ -7,6 +7,9 @@
  * All text, links, and settings are centralized here for easy editing.
  */
 
+/** Where every "Check my company" button goes: the GoTax app. */
+export const APP_URL = "https://gotax-staging.ray-realms.com/";
+
 export const siteConfig = {
   // Brand
   name: "GoTax",
