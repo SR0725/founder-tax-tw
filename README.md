@@ -21,6 +21,19 @@ One complete workflow:
 3. AI drafts each filing and flags every field it is unsure about, with its reasoning.
 4. A non-credentialed reviewer clears an AI-generated checklist before a CPA signs.
 
+## Docs
+
+- `docs/CONTEXT.md`: full project context for teammates (Traditional Chinese)
+- `docs/tax-rules.md`: draft filing rules, all unverified until sourced
+- `CLAUDE.md`: short working rules for AI coding assistants
+
+## Why us
+
+One of us is this user: a Taiwanese founder with a Delaware company. Existing
+services pair a web form with a room of accountants and only cover the US side.
+We cover both the US filings and the Taiwan-side consequences, and we put the
+work in the hands of a non-credentialed reviewer backed by AI.
+
 ## Rules for this repo
 
 - Everything here is built during the event.
@@ -29,4 +42,7 @@ One complete workflow:
 
 ## Team
 
-Four people. Add your name and GitHub handle here.
+- Ray ([@SR0725](https://github.com/SR0725))
+- [@maxyeh0817](https://github.com/maxyeh0817)
+- [@FOwen123](https://github.com/FOwen123)
+- Fourth teammate joining
