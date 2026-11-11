@@ -26,4 +26,6 @@
 
 ## 技術
 
-Next.js（App Router、TypeScript、Tailwind），`src/` 目錄。金鑰放 `.env.local`，不進 repo。
+Next.js（App Router、TypeScript、Tailwind），`src/` 目錄。
+
+模型走本機的 `claude` CLI（`src/app/api/draft/route.ts`），不用 API 金鑰。沒裝 CLI 會自動退回關鍵字規則並在畫面上說明。

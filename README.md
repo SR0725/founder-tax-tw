@@ -28,7 +28,11 @@ npm install
 npm run dev
 ```
 
-Then open http://localhost:3000. Put API keys in `.env.local` (never committed).
+Then open http://localhost:3000.
+
+Drafting calls the local [Claude Code](https://claude.com/claude-code) CLI (`claude`), so it uses whatever
+Claude login that machine already has and needs no API key. If the CLI is missing, the app says so on
+screen and falls back to keyword rules.
 
 ## Docs
 

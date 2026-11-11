@@ -1,5 +1,5 @@
-import Anthropic from "@anthropic-ai/sdk";
-import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
+import { spawn } from "node:child_process";
+import { tmpdir } from "node:os";
 import { z } from "zod";
 import { companies } from "@/lib/obligations";
 import {
@@ -17,6 +17,7 @@ import {
 export const maxDuration = 120;
 
 const OWNER = { name: "Ray Lin", country: "Taiwan" };
+const MODEL = "claude-opus-5-5";
 
 const Classification = z.object({
   transactions: z.array(
@@ -47,30 +48,66 @@ Mark confidence "low" whenever a careful preparer would want a document or an an
 
 Write each reason as one or two plain sentences addressed to the reviewer. Say what you saw and what would settle it. Return exactly one entry per transaction id you were given.`;
 
-async function classifyWithClaude(txns: Txn[], relatedCompanies: string[]): Promise<Classified[] | null> {
-  const client = new Anthropic();
-  const response = await client.messages.parse({
-    model: "claude-opus-5-5",
-    max_tokens: 16000,
-    thinking: { type: "adaptive" },
-    system: SYSTEM,
-    messages: [
-      {
-        role: "user",
-        content: `Company: Kuroshio Studio LLC (Wyoming, formed 2026-08-04).
+// The CLI rejects a schema that carries a "$schema" URI, so strip it.
+const { $schema: _ignored, ...SCHEMA } = z.toJSONSchema(Classification);
+void _ignored;
+
+class ClaudeUnavailable extends Error {}
+
+// Runs the local Claude Code CLI in print mode with no tools, no MCP servers and no user
+// settings, so it behaves as a plain model call that returns schema-checked JSON.
+function runClaude(prompt: string): Promise<unknown> {
+  const args = [
+    "-p",
+    "--model", MODEL,
+    "--effort", "low",
+    "--output-format", "json",
+    "--json-schema", JSON.stringify(SCHEMA),
+    "--system-prompt", SYSTEM,
+    "--tools", "",
+    "--strict-mcp-config",
+    "--setting-sources", "",
+  ];
+  return new Promise((resolve, reject) => {
+    const child = spawn(process.env.CLAUDE_BIN ?? "claude", args, { cwd: tmpdir() });
+    let out = "";
+    const timer = setTimeout(() => {
+      child.kill();
+      reject(new ClaudeUnavailable("Claude took longer than 90 seconds"));
+    }, 90_000);
+    child.stdout.on("data", (chunk) => (out += chunk));
+    child.on("error", () => {
+      clearTimeout(timer);
+      reject(new ClaudeUnavailable("The Claude CLI is not installed on this machine"));
+    });
+    child.on("close", (code) => {
+      clearTimeout(timer);
+      try {
+        const result = JSON.parse(out);
+        if (code !== 0 || result.is_error || !result.structured_output) {
+          return reject(new ClaudeUnavailable("Claude did not return a usable answer"));
+        }
+        resolve(result.structured_output);
+      } catch {
+        reject(new ClaudeUnavailable("Claude returned output we couldn't read"));
+      }
+    });
+    child.stdin.end(prompt);
+  });
+}
+
+async function classifyWithClaude(txns: Txn[], relatedCompanies: string[]): Promise<Classified[]> {
+  const raw = await runClaude(`Company: Kuroshio Studio LLC (Wyoming, formed 2026-08-04).
 Sole owner: ${OWNER.name}, tax resident of ${OWNER.country}.
 Other companies the owner holds a stake in: ${relatedCompanies.join(", ")}.
 
 Bank transactions for the tax year (positive = money in):
-${JSON.stringify(txns, null, 2)}`,
-      },
-    ],
-    output_config: { effort: "low", format: zodOutputFormat(Classification) },
-  });
+${JSON.stringify(txns, null, 2)}`);
 
-  if (response.stop_reason === "refusal" || !response.parsed_output) return null;
+  const parsed = Classification.safeParse(raw);
+  if (!parsed.success) throw new ClaudeUnavailable("Claude's answer did not match the expected shape");
 
-  const byId = new Map(response.parsed_output.transactions.map((c) => [c.id, c]));
+  const byId = new Map(parsed.data.transactions.map((c) => [c.id, c]));
   return txns.map((t) => {
     const c = byId.get(t.id);
     // A transaction the model skipped is surfaced for review rather than silently dropped.
@@ -94,33 +131,18 @@ export async function POST(request: Request) {
   const company = companies.find((c) => c.id === "kuroshio")!;
   const related = companies.filter((c) => c.id !== company.id).map((c) => c.name);
 
-  let classified: Classified[] | null = null;
-  let source: Draft["source"] = "rules";
-  let sourceNote = "No API key is configured, so transactions were classified by keyword rules.";
+  let classified: Classified[];
+  let source: Draft["source"] = "claude";
+  let sourceNote = "Transactions classified by Claude. Totals computed in code.";
 
-  if (process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN) {
-    try {
-      classified = await classifyWithClaude(txns, related);
-      if (classified) {
-        source = "claude";
-        sourceNote = "Transactions classified by Claude. Totals computed in code.";
-      } else {
-        sourceNote = "Claude declined or returned an unreadable answer, so keyword rules were used.";
-      }
-    } catch (error) {
-      if (error instanceof Anthropic.AuthenticationError) {
-        sourceNote = "The API key was rejected, so keyword rules were used.";
-      } else if (error instanceof Anthropic.RateLimitError) {
-        sourceNote = "Claude is rate limited right now, so keyword rules were used.";
-      } else if (error instanceof Anthropic.APIError) {
-        sourceNote = `Claude returned an error (${error.status ?? "network"}), so keyword rules were used.`;
-      } else {
-        throw error;
-      }
-    }
+  try {
+    classified = await classifyWithClaude(txns, related);
+  } catch (error) {
+    if (!(error instanceof ClaudeUnavailable)) throw error;
+    classified = classifyWithRules(txns, OWNER.name, related);
+    source = "rules";
+    sourceNote = `${error.message}, so keyword rules were used.`;
   }
-
-  classified ??= classifyWithRules(txns, OWNER.name, related);
 
   const draft: Draft = {
     source,
