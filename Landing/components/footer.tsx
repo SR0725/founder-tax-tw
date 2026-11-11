@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowRight, Mail } from "lucide-react";
+import { ArrowRight, Check, Loader2, Mail } from "lucide-react";
+import { useState, type FormEvent } from "react";
 import type { ReactNode } from "react";
 import { useLang } from "@/lib/i18n";
 import { Logo } from "@/components/logo";
@@ -16,6 +17,114 @@ const footerLinks = {
   ],
 };
 
+type Status = "idle" | "sending" | "done" | "error" | "invalid";
+
+const FORM_COPY = {
+  placeholder: { en: "Enter your email", zh: "輸入你的 email" },
+  label: { en: "Email address", zh: "Email 地址" },
+  join: { en: "Join waitlist", zh: "加入候補名單" },
+  sending: { en: "Joining…", zh: "送出中…" },
+  done: { en: "You're on the list. We'll email you when GoTax opens.", zh: "已加入名單，GoTax 開放時會寄信通知你。" },
+  invalid: { en: "That email doesn't look right. Check it and try again.", zh: "這個 email 格式好像不對，請確認後再試一次。" },
+  error: { en: "We couldn't save that just now. Please try again in a minute.", zh: "目前無法送出，請稍後再試一次。" },
+  privacy: { en: "We only use your email to tell you when GoTax opens.", zh: "你的 email 只會用來通知 GoTax 開放。" },
+};
+
+function WaitlistForm(): ReactNode {
+  const { t, lang } = useLang();
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<Status>("idle");
+
+  const submit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (status === "sending") return;
+    const company = (new FormData(e.currentTarget).get("company") as string | null) ?? "";
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, lang, company }),
+      });
+      if (res.ok) {
+        setStatus("done");
+        setEmail("");
+      } else {
+        setStatus(res.status === 400 ? "invalid" : "error");
+      }
+    } catch {
+      setStatus("error");
+    }
+  };
+
+  if (status === "done") {
+    return (
+      <p role="status" className="flex items-center gap-2 rounded-xl bg-background px-5 py-3.5 text-sm font-medium text-foreground shadow-lg">
+        <Check className="size-4 text-brand" aria-hidden="true" />
+        {t(FORM_COPY.done)}
+      </p>
+    );
+  }
+
+  const message = status === "invalid" ? FORM_COPY.invalid : status === "error" ? FORM_COPY.error : null;
+
+  return (
+    <div className="w-full max-w-md max-[850px]:max-w-none">
+      <form
+        onSubmit={submit}
+        noValidate
+        className="flex items-center w-full bg-background rounded-xl p-1.5 shadow-lg max-[850px]:flex-col max-[850px]:p-3 max-[850px]:gap-3"
+      >
+        <div className="flex items-center flex-1 w-full">
+          <Mail className="w-5 h-5 text-muted-foreground ml-3 flex-none max-[850px]:ml-1" aria-hidden="true" />
+          <input
+            type="email"
+            name="email"
+            required
+            autoComplete="email"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (status === "invalid" || status === "error") setStatus("idle");
+            }}
+            placeholder={t(FORM_COPY.placeholder)}
+            aria-label={t(FORM_COPY.label)}
+            aria-invalid={status === "invalid"}
+            aria-describedby={message ? "waitlist-message" : undefined}
+            className="flex-1 px-3 py-2.5 text-sm bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none"
+          />
+          {/* honeypot for bots; hidden from people and screen readers */}
+          <input type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] size-px opacity-0" />
+        </div>
+        <button
+          type="submit"
+          disabled={status === "sending"}
+          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-brand-deep hover:bg-brand disabled:opacity-70 disabled:cursor-wait text-white rounded-lg text-sm font-medium transition-colors whitespace-nowrap max-[850px]:w-full max-[850px]:py-3"
+        >
+          {status === "sending" ? (
+            <>
+              {t(FORM_COPY.sending)}
+              <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+            </>
+          ) : (
+            <>
+              {t(FORM_COPY.join)}
+              <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            </>
+          )}
+        </button>
+      </form>
+      <p
+        id="waitlist-message"
+        role={message ? "alert" : undefined}
+        className={`mt-3 text-sm ${message ? "font-medium text-accent" : "text-brand-ink/80"}`}
+      >
+        {t(message ?? FORM_COPY.privacy)}
+      </p>
+    </div>
+  );
+}
+
 export function Footer(): ReactNode {
   const { t } = useLang();
   return (
@@ -30,24 +139,7 @@ export function Footer(): ReactNode {
               {t({ en: "Know what your company owes before the IRS tells you", zh: "在 IRS 找上門之前，先知道公司該報什麼" })}
             </h2>
             
-            <form className="flex items-center w-full max-w-md bg-background rounded-xl p-1.5 shadow-lg max-[850px]:flex-col max-[850px]:p-3 max-[850px]:gap-3 max-[850px]:max-w-none">
-              <div className="flex items-center flex-1 w-full">
-                <Mail className="w-5 h-5 text-muted-foreground ml-3 flex-none max-[850px]:ml-1" aria-hidden="true" />
-                <input
-                  type="email"
-                  placeholder={t({ en: "Enter your email", zh: "輸入你的 email" })}
-                  aria-label={t({ en: "Email address", zh: "Email 地址" })}
-                  className="flex-1 px-3 py-2.5 text-sm bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none"
-                />
-              </div>
-              <button
-                type="submit"
-                className="flex items-center justify-center gap-2 px-5 py-2.5 bg-brand-deep hover:bg-brand text-white rounded-lg text-sm font-medium transition-colors whitespace-nowrap max-[850px]:w-full max-[850px]:py-3"
-              >
-                {t({ en: "Join waitlist", zh: "加入候補名單" })}
-                <ArrowRight className="w-4 h-4" aria-hidden="true" />
-              </button>
-            </form>
+            <WaitlistForm />
           </div>
         </div>
       </div>
